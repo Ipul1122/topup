@@ -14,6 +14,8 @@ return new class extends Migration
             Schema::create('categories', function (Blueprint $table) {
                 $table->id();
                 $table->string('name'); // ex: Mobile Legends
+                $table->string('slug')->unique(); // Pastikan baris ini ada
+                $table->boolean('is_active')->default(true);
                 $table->string('brand_code')->unique(); // ex: mobilelegend (kode dari provider)
                 $table->timestamps();
             });

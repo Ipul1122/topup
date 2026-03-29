@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->string('sku_code')->unique(); // ex: ML86 (Kode unik buat transaksi)
                 $table->decimal('price_provider', 12, 2); // Harga modal dari APIGames
                 $table->decimal('price_sell', 12, 2); // Harga jual di web lu
+                $table->string('status')->default('aktif'); // Status produk: aktif, inactive
                 $table->boolean('is_active')->default(true);
                 $table->timestamps();
             });
