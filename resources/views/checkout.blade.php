@@ -62,46 +62,50 @@
             payButton.innerHTML = 'Memproses...';
             payButton.disabled = true;
 
-            try {
-                // Tembak data ke Controller Checkout
+           try {
                 const response = await fetch("{{ route('checkout.process') }}", {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    // Jika sukses dapet token, munculkan Pop-up Midtrans
+                    // JANGAN nyalakan tombol di sini. Biarkan tombol berstatus "Memproses..."
                     window.snap.pay(result.snap_token, {
-                        onSuccess: function(result){
-                            alert("Pembayaran sukses! Sistem sedang memproses top-up kamu.");
-                            window.location.href = '/'; // Redirect ke home
+                        onSuccess: function(result){ 
+                            alert("Pembayaran sukses! Item kamu sedang dikirim."); 
+                            window.location.reload(); 
                         },
-                        onPending: function(result){
-                            alert("Menunggu pembayaran kamu!");
+                        onPending: function(result){ 
+                            alert("Pesanan dibuat! Silakan selesaikan pembayaran."); 
+                            window.location.reload(); // Reload agar user tidak double order
                         },
-                        onError: function(result){
-                            alert("Pembayaran gagal!");
+                        onError: function(result){ 
+                            alert("Pembayaran gagal!"); 
+                            // Nyalakan tombol lagi karena gagal
+                            payButton.innerHTML = originalText;
+                            payButton.disabled = false;
                         },
                         onClose: function(){
-                            alert('Kamu menutup popup tanpa menyelesaikan pembayaran');
+                            alert("Kamu menutup pop-up sebelum menyelesaikan pembayaran.");
+                            // Nyalakan tombol lagi karena user batal bayar
+                            payButton.innerHTML = originalText;
+                            payButton.disabled = false;
                         }
                     });
                 } else {
                     alert('Gagal: ' + result.message);
+                    payButton.innerHTML = originalText;
+                    payButton.disabled = false;
                 }
             } catch (error) {
-                console.error(error);
-                alert('Terjadi kesalahan sistem.');
-            } finally {
-                // Kembalikan tombol seperti semula
-                payButton.innerHTML = 'Bayar Sekarang';
+                alert('Terjadi kesalahan sistem, silakan coba lagi.');
+                payButton.innerHTML = originalText;
                 payButton.disabled = false;
             }
+            
         });
     </script>
 </body>
