@@ -80,4 +80,22 @@ class ApigamesService
             ];
         }
     }
+
+    public function getProducts(): array
+    {
+        // Sesuaikan endpoint ini dengan dokumentasi APIGames lu
+        // Biasanya /merchant/[merchant_id]/katalog atau semacamnya
+        $endpoint = $this->baseUrl . config('apigames.endpoints.merchant') . '/' . $this->merchantId . '/katalog';
+        
+        try {
+            $response = Http::get($endpoint, [
+                'signature' => $this->generateSignature(),
+            ]);
+
+            return $response->json() ?? [];
+        } catch (\Exception $e) {
+            Log::error('APIGames Get Products Error: ' . $e->getMessage());
+            return ['status' => 0, 'message' => 'Gagal menarik data produk'];
+        }
+    }
 }
