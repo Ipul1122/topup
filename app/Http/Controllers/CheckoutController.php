@@ -24,46 +24,50 @@ class CheckoutController extends Controller
     // 2. Memproses Data & Meminta Snap Token Midtrans
     public function process(Request $request, MidtransService $midtransService)
     {
-        // Validasi input dari user
+        // 1. Validasi Input
         $request->validate([
             'product_id'     => 'required|exists:products,id',
-            'target_user_id' => 'required|string', // Format: 12345678(1234)
-            'customer_name'  => 'required|string',
+            'target_user_id' => 'required|string', 
             'customer_phone' => 'required|string',
+            'customer_email' => 'required|email', // Validasi email dari frontend
         ]);
 
         $product = Product::findOrFail($request->product_id);
         
-        // Bikin Order ID unik (Misal: TRX-AB12CD34)
+        // 2. Kalkulasi Total + PPN (Keamanan Backend)
+        $ppn = $product->price_sell * 0.11;
+        $totalAmount = round($product->price_sell + $ppn); // Dibulatkan agar tidak ada desimal aneh
+
         $orderId = 'TRX-' . strtoupper(Str::random(8));
 
-        // Simpan ke database (Tabel Transactions)
+        // 3. Simpan ke database
+        // Kita simpan email di kolom customer_name karena tabel lu belum punya kolom khusus email
         $transaction = Transaction::create([
             'order_id'       => $orderId,
             'product_id'     => $product->id,
-            'customer_name'  => $request->customer_name,
+            'customer_name'  => $request->customer_email, 
             'customer_phone' => $request->customer_phone,
             'target_user_id' => $request->target_user_id,
-            'amount'         => $product->price_sell,
+            'amount'         => $totalAmount, // Nominal yang akan ditagih Midtrans
             'payment_status' => 'pending',
             'topup_status'   => 'pending',
         ]);
 
-        // Panggil Context Service Midtrans
+        // 4. Minta Token ke Midtrans
         $snapToken = $midtransService->createSnapToken([
             'order_id'       => $transaction->order_id,
             'amount'         => $transaction->amount,
-            'customer_name'  => $transaction->customer_name,
+            'customer_name'  => 'Pelanggan',
+            'customer_email' => $request->customer_email,
             'customer_phone' => $transaction->customer_phone,
             'product_sku'    => $product->sku_code,
-            'product_name'   => $product->name,
+            'product_name'   => $product->name . " (+PPN 11%)",
         ]);
 
         if (!$snapToken) {
-            return response()->json(['success' => false, 'message' => 'Gagal mendapatkan token pembayaran'], 500);
+            return response()->json(['success' => false, 'message' => 'Gagal mendapatkan token'], 500);
         }
 
-        // Kembalikan token ke frontend (AJAX)
         return response()->json(['success' => true, 'snap_token' => $snapToken]);
     }
 }

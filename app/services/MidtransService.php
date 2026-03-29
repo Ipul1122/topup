@@ -29,6 +29,7 @@ class MidtransService
             ],
             'customer_details' => [
                 'first_name' => $transactionData['customer_name'],
+                'email'      => $transactionData['customer_email'], 
                 'phone'      => $transactionData['customer_phone'],
             ],
             'item_details' => [
