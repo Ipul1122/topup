@@ -98,4 +98,30 @@ class ApigamesService
             return ['status' => 0, 'message' => 'Gagal menarik data produk'];
         }
     }
+
+    /**
+     * Eksekusi Transaksi Top Up (V2)
+     */
+    public function topup(string $refId, string $skuCode, string $targetUserId): array
+    {
+        $endpoint = $this->baseUrl . config('apigames.endpoints.transaksi');
+        
+        // APIGames V2 biasanya minta signature: md5(merchant_id + secret_key + ref_id)
+        $signature = md5(trim($this->merchantId) . trim($this->secretKey) . $refId);
+
+        try {
+            $response = Http::post($endpoint, [
+                'ref_id'      => $refId,
+                'merchant_id' => $this->merchantId,
+                'produk'      => $skuCode,
+                'tujuan'      => $targetUserId,
+                'signature'   => $signature,
+            ]);
+
+            return $response->json() ?? [];
+        } catch (\Exception $e) {
+            Log::error('APIGames Topup Error: ' . $e->getMessage());
+            return ['status' => 0, 'message' => 'Gagal hit API Provider'];
+        }
+    }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Up Mobile Legends - Ipul Store</title>
+    <title>Top Up Mobile Legends - pultopup</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -27,7 +27,7 @@
             <div class="flex justify-between h-16 items-center">
                 <div class="flex-shrink-0 flex items-center gap-2">
                     <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white text-xl">I</div>
-                    <span class="font-extrabold text-xl tracking-tight text-slate-900">IPUL<span class="text-blue-600">STORE</span></span>
+                    <span class="font-extrabold text-xl tracking-tight text-slate-900">PUL<span class="text-blue-600">TOPUP</span></span>
                 </div>
                 <div>
                     <a href="#" class="text-sm font-medium text-slate-500 hover:text-blue-600 transition">Cek Pesanan</a>
