@@ -55,12 +55,24 @@ class CallbackController extends Controller
 
                 // Cek hasil dari APIGames
                 if (isset($topupResponse['status']) && $topupResponse['status'] == 1) {
-                    $sn = $topupResponse['data']['sn'] ?? 'Sukses';
-                    $transaction->update(['topup_status' => 'success', 'sn' => $sn]);
-                    Log::info("Top Up Sukses: " . $orderId);
+                    $data = $topupResponse['data'] ?? [];
+                    $status = $data['status'] ?? '';
+                    $sn = $data['sn'] ?? 'Sukses';
+
+                    if (strcasecmp($status, 'Sukses') === 0) {
+                        $transaction->update(['topup_status' => 'success', 'sn' => $sn]);
+                        Log::info("Top Up Sukses: " . $orderId);
+                    } elseif (strcasecmp($status, 'Gagal') === 0) {
+                        $transaction->update(['topup_status' => 'failed', 'sn' => $sn]);
+                        Log::error("Top Up Gagal di APIGames (Transaksi Gagal): " . $orderId, $topupResponse);
+                    } else {
+                        // Jika status masih pending/processing di provider
+                        $transaction->update(['topup_status' => 'processing', 'sn' => $sn]);
+                        Log::info("Top Up Pending di APIGames: " . $orderId);
+                    }
                 } else {
                     $transaction->update(['topup_status' => 'failed']);
-                    Log::error("Top Up Gagal di APIGames: ", $topupResponse);
+                    Log::error("Top Up Gagal di APIGames (API Error): ", $topupResponse);
                 }
             }
         } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
