@@ -31,8 +31,7 @@
             </a>
             
             <!-- Tambahkan game lain di sini nanti -->
-            <a href="{{ url('/
-            -fire') }}" class="block bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6">
+            <a href="{{ url('/free-fire') }}" class="block bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-6">
                 <img src="{{ asset('image/free-fire-logo.jpg') }}" alt="Free Fire Logo" class="w-24 h-24 mx-auto mb-4 object-contain">
                 <h2 class="text-xl font-semibold text-slate-800">Free Fire</h2>
                 <p class="text-sm text-slate-500 mt-2">Top up Diamond Free Fire</p>

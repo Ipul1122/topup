@@ -109,13 +109,22 @@ class ApigamesService
         // APIGames V2 wajib signature dengan format: md5(merchant_id:secret_key:ref_id)
         $signature = md5(trim($this->merchantId) . ':' . trim($this->secretKey) . ':' . trim($refId));
 
+        $tujuan = trim($targetUserId);
+        $serverId = '';
+
+        // Jika format targetUserId adalah userID(zoneID), contoh: 12345678(1234)
+        if (preg_match('/^([^\(\)]+)\(([^ \(\)]+)\)$/', $tujuan, $matches)) {
+            $tujuan = trim($matches[1]);
+            $serverId = trim($matches[2]);
+        }
+
         try {
             $response = Http::post($endpoint, [
                 'ref_id'      => $refId,
                 'merchant_id' => $this->merchantId,
                 'produk'      => $skuCode,
-                'tujuan'      => $targetUserId,
-                'server_id'   => '', // Wajib dikirim meskipun kosong agar tidak menyebabkan error "JSON not valid"
+                'tujuan'      => $tujuan,
+                'server_id'   => $serverId,
                 'signature'   => $signature,
             ]);
 

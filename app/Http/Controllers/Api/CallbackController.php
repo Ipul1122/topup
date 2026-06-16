@@ -15,6 +15,11 @@ class CallbackController extends Controller
         $payload = $request->all();
         Log::info('Webhook Midtrans Masuk: ', $payload); // Catat di log untuk debugging
 
+        // Cek jika payload kosong atau tidak lengkap (seperti ping test dari Midtrans Dashboard)
+        if (empty($payload) || !isset($payload['order_id']) || !isset($payload['status_code']) || !isset($payload['gross_amount']) || !isset($payload['signature_key'])) {
+            return response()->json(['success' => true, 'message' => 'Notification endpoint is active'], 200);
+        }
+
         // 1. Validasi Keamanan (Signature Key)
         $orderId = $payload['order_id'];
         $statusCode = $payload['status_code'];

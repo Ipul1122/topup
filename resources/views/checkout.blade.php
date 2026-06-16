@@ -7,7 +7,7 @@
     @vite('resources/css/app.css')
     
     <script type="text/javascript"
-      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
       data-client-key="{{ config('midtrans.client_key') }}"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
@@ -32,8 +32,8 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Nama Pembeli</label>
-                <input type="text" name="customer_name" placeholder="Nama Kamu" required
+                <label class="block text-gray-700 text-sm font-bold mb-2">Alamat Email</label>
+                <input type="email" name="customer_email" placeholder="nama@email.com" required
                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
@@ -56,6 +56,7 @@
             
             const form = this;
             const payButton = document.getElementById('pay-button');
+            const originalText = payButton.innerHTML;
             const formData = new FormData(form);
 
             // Ubah tombol jadi loading
