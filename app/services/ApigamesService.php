@@ -106,8 +106,8 @@ class ApigamesService
     {
         $endpoint = $this->baseUrl . config('apigames.endpoints.transaksi');
         
-        // APIGames V2 biasanya minta signature: md5(merchant_id + secret_key + ref_id)
-        $signature = md5(trim($this->merchantId) . trim($this->secretKey) . $refId);
+        // APIGames V2 wajib signature dengan format: md5(merchant_id:secret_key:ref_id)
+        $signature = md5(trim($this->merchantId) . ':' . trim($this->secretKey) . ':' . trim($refId));
 
         try {
             $response = Http::post($endpoint, [
@@ -115,6 +115,7 @@ class ApigamesService
                 'merchant_id' => $this->merchantId,
                 'produk'      => $skuCode,
                 'tujuan'      => $targetUserId,
+                'server_id'   => '', // Wajib dikirim meskipun kosong agar tidak menyebabkan error "JSON not valid"
                 'signature'   => $signature,
             ]);
 
@@ -122,6 +123,30 @@ class ApigamesService
         } catch (\Exception $e) {
             Log::error('APIGames Topup Error: ' . $e->getMessage());
             return ['status' => 0, 'message' => 'Gagal hit API Provider'];
+        }
+    }
+
+    /**
+     * Cek Status Transaksi di APIGames (V2)
+     */
+    public function checkTransactionStatus(string $refId): array
+    {
+        $endpoint = $this->baseUrl . config('apigames.endpoints.transaksi') . '/status';
+        
+        // Signature: md5(merchant_id:secret_key:ref_id)
+        $signature = md5(trim($this->merchantId) . ':' . trim($this->secretKey) . ':' . trim($refId));
+
+        try {
+            $response = Http::get($endpoint, [
+                'merchant_id' => $this->merchantId,
+                'ref_id'      => $refId,
+                'signature'   => $signature,
+            ]);
+
+            return $response->json() ?? [];
+        } catch (\Exception $e) {
+            Log::error('APIGames Check Transaction Status Error: ' . $e->getMessage());
+            return ['status' => 0, 'message' => 'Gagal mengecek status transaksi'];
         }
     }
 }

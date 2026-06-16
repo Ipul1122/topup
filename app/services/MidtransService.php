@@ -41,6 +41,10 @@ class MidtransService
                 ]
             ],
         ];
+        
+        if (config('midtrans.notification_url')) {
+            $params['notification_url'] = config('midtrans.notification_url');
+        }
 
         try {
             // Minta Snap Token ke Midtrans
