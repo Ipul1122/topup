@@ -12,46 +12,57 @@ class ProductSeeder extends Seeder
     public function run()
     {
         // 1. Mobile Legends Category & Products
-        $mlCategoryName = 'Mobile Legend Unipin';
-        $mlCategory = Category::firstOrCreate(
-            ['slug' => Str::slug($mlCategoryName)],
+        $mlCategoryName = 'Mobile Legend DGHOST';
+        $mlCategory = Category::updateOrCreate(
+            ['brand_code' => 'mobilelegend'],
             [
                 'name' => $mlCategoryName,
+                'slug' => Str::slug($mlCategoryName),
                 'is_active' => true,
-                'brand_code' => 'mobilelegend'
             ]
         );
 
+        // Hapus produk lama ber-category_id ini agar tidak bentrok
+        Product::where('category_id', $mlCategory->id)->delete();
+
         $mlProducts = [
             [
-                'name'           => '5 Diamond Mobile Legend Unipin',
-                'sku_code'       => 'UPMBL5',
-                'price_provider' => 1449.00,
+                'name'           => '5 Diamonds Mobile Legend DGHOST',
+                'sku_code'       => 'DGHMBL5',
+                'price_provider' => 1666.00,
                 'price_sell'     => 2000.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],
             [
-                'name'           => '12 Diamond Mobile Legend Unipin',
-                'sku_code'       => 'UPMBL12',
-                'price_provider' => 3900.00,
+                'name'           => '12 Diamonds Mobile Legend DGHOST',
+                'sku_code'       => 'DGHMBL12',
+                'price_provider' => 3891.00,
                 'price_sell'     => 4500.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],
             [
-                'name'           => '19 Diamond Mobile Legend Unipin',
-                'sku_code'       => 'UPMBL19',
-                'price_provider' => 5742.00,
-                'price_sell'     => 6500.00,
+                'name'           => '19 Diamonds Mobile Legend DGHOST',
+                'sku_code'       => 'DGHMBL19',
+                'price_provider' => 6116.00,
+                'price_sell'     => 7000.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],
             [
-                'name'           => '28 Diamond Mobile Legend Unipin',
-                'sku_code'       => 'UPMBL28',
-                'price_provider' => 7830.00,
-                'price_sell'     => 8500.00,
+                'name'           => '28 Diamonds Mobile Legend DGHOST',
+                'sku_code'       => 'DGHMBL28',
+                'price_provider' => 8900.00,
+                'price_sell'     => 10000.00,
+                'status'         => 'aktif',
+                'is_active'      => true,
+            ],
+            [
+                'name'           => '44 Diamonds Mobile Legend DGHOST',
+                'sku_code'       => 'DGHMBL44',
+                'price_provider' => 13350.00,
+                'price_sell'     => 15000.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],
