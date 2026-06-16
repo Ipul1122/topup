@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Up Mobile Legends - skyfoxmarket</title>
+    <title>Top Up Free Fire - skyfoxmarket</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -30,19 +30,19 @@
             <div class="lg:w-1/3">
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden sticky top-24">
                     <div class="h-40 bg-slate-900 relative">
-                        <img src="https://esports.id/img/article/525620200508124032.jpg" alt="MLBB Banner" class="w-full h-full object-cover opacity-60">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1000" alt="Free Fire Banner" class="w-full h-full object-cover opacity-60">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
                     </div>
                     
                     <div class="p-6 relative">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/e/e5/Mobile_Legends_Bang_Bang_logo.png" alt="MLBB Logo" class="w-20 h-20 rounded-2xl absolute -top-12 left-6 border-4 border-white bg-slate-900 shadow-md">
+                        <img src="{{ asset('image/free-fire-logo.jpg') }}" alt="Free Fire Logo" class="w-20 h-20 rounded-2xl absolute -top-12 left-6 border-4 border-white bg-slate-900 shadow-md">
                         
                         <div class="mt-8">
-                            <h1 class="text-2xl font-bold text-slate-900">Mobile Legends</h1>
-                            <p class="text-sm text-slate-500 mt-1">Moonton</p>
+                            <h1 class="text-2xl font-bold text-slate-900">Free Fire</h1>
+                            <p class="text-sm text-slate-500 mt-1">Garena</p>
                             
                             <div class="mt-4 space-y-3 text-sm text-slate-600">
-                                <p>Top up Diamond Mobile Legends resmi, proses otomatis 1 detik, aman dan terpercaya.</p>
+                                <p>Top up Diamond Free Fire resmi, proses otomatis, aman dan terpercaya.</p>
                                 <ul class="space-y-2 mt-4 text-xs font-medium">
                                     <li class="flex items-center gap-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Buka 24 Jam</li>
                                     <li class="flex items-center gap-2"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Pembayaran Instan via QRIS</li>
@@ -63,17 +63,13 @@
                             <h2 class="text-lg font-bold text-slate-800">Masukkan ID Game</h2>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
-                                <input type="number" id="user_id" placeholder="Masukkan User ID" required 
-                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
-                            </div>
-                            <div>
-                                <input type="number" id="zone_id" placeholder="Zone ID" required 
+                                <input type="number" id="user_id" placeholder="Masukkan Player ID" required 
                                     class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
                             </div>
                         </div>
-                        <p class="text-xs text-slate-500 mt-3 italic">Untuk mengetahui User ID Anda, silakan klik menu profile dibagian kiri atas pada menu utama game. Contoh: 12345678 (1234).</p>
+                        <p class="text-xs text-slate-500 mt-3 italic">Untuk mengetahui Player ID Anda, silakan klik menu profil di bagian kiri atas pada menu utama game. Contoh: 123456789.</p>
                     </div>
 
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 lg:p-8">
@@ -175,9 +171,7 @@
             const payButton = document.getElementById('pay-button');
             const originalText = payButton.innerHTML;
 
-            const userId = document.getElementById('user_id').value;
-            const zoneId = document.getElementById('zone_id').value;
-            const targetUserId = `${userId}(${zoneId})`;
+            const targetUserId = document.getElementById('user_id').value;
             
             const wa = document.getElementById('whatsapp').value;
             const email = document.getElementById('email').value;

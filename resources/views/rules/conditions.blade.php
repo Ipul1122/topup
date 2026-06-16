@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conditions - PULTOPUP</title>
+    <title>Conditions - skyfoxmarket</title>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -23,7 +23,7 @@
         <div class="bg-white rounded-2xl shadow-md p-6 lg:p-8">
             <h1 class="text-3xl font-bold text-slate-900 mb-6">Conditions of Use</h1>
             <div class="prose max-w-none text-slate-600">
-                <p>Welcome to pultopup. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following conditions of use, which together with our privacy policy govern pultopup's relationship with you in relation to this website.</p>
+                <p>Welcome to skyfoxmarket. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following conditions of use, which together with our privacy policy govern skyfoxmarket's relationship with you in relation to this website.</p>
 
                 <h2 class="text-xl font-semibold text-slate-800 mt-6">1. Use of the Website</h2>
                 <p>By using this website, you warrant that you are at least 18 years of age or are accessing the website under the supervision of a parent or legal guardian.</p>
@@ -35,7 +35,7 @@
                 <p>Payment can be made via the payment gateways available on our website. We use a third-party payment provider to process payments securely. We do not store your credit card details.</p>
 
                 <h2 class="text-xl font-semibold text-slate-800 mt-6">4. Limitation of Liability</h2>
-                <p>pultopup will not be liable for any direct, indirect, incidental, special, or consequential damages that result from the use of, or the inability to use, the service or products purchased from the site.</p>
+                <p>skyfoxmarket will not be liable for any direct, indirect, incidental, special, or consequential damages that result from the use of, or the inability to use, the service or products purchased from the site.</p>
 
                 <p class="mt-8"><strong>Last updated:</strong> April 4, 2026</p>
             </div>
