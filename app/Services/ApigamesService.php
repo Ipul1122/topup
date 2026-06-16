@@ -118,6 +118,11 @@ class ApigamesService
             $serverId = trim($matches[2]);
         }
 
+        // Jalur mapping otomatis untuk pengujian (H2H UniPin -> Direct DgRings)
+        if ($skuCode === 'UPMBL5') {
+            $skuCode = 'DGRMBL3';
+        }
+
         try {
             $response = Http::post($endpoint, [
                 'ref_id'      => $refId,
