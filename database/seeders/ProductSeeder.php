@@ -12,7 +12,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         // 1. Mobile Legends Category & Products
-        $mlCategoryName = 'Mobile Legend DGHOST';
+        $mlCategoryName = 'Mobile Legends';
         $mlCategory = Category::updateOrCreate(
             ['brand_code' => 'mobilelegend'],
             [
@@ -27,42 +27,26 @@ class ProductSeeder extends Seeder
 
         $mlProducts = [
             [
-                'name'           => '5 Diamonds Mobile Legend DGHOST',
-                'sku_code'       => 'DGHMBL5',
-                'price_provider' => 1666.00,
+                'name'           => '5 Diamonds Mobile Legend',
+                'sku_code'       => 'ml5',
+                'price_provider' => 1480.00,
                 'price_sell'     => 2000.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],
             [
-                'name'           => '12 Diamonds Mobile Legend DGHOST',
-                'sku_code'       => 'DGHMBL12',
-                'price_provider' => 3891.00,
+                'name'           => '10 Diamonds Mobile Legend',
+                'sku_code'       => 'ml10',
+                'price_provider' => 2830.00,
+                'price_sell'     => 4000.00,
+                'status'         => 'aktif',
+                'is_active'      => true,
+            ],
+            [
+                'name'           => '12 Diamonds Mobile Legend',
+                'sku_code'       => 'ml12',
+                'price_provider' => 3390.00,
                 'price_sell'     => 4500.00,
-                'status'         => 'aktif',
-                'is_active'      => true,
-            ],
-            [
-                'name'           => '19 Diamonds Mobile Legend DGHOST',
-                'sku_code'       => 'DGHMBL19',
-                'price_provider' => 6116.00,
-                'price_sell'     => 7000.00,
-                'status'         => 'aktif',
-                'is_active'      => true,
-            ],
-            [
-                'name'           => '28 Diamonds Mobile Legend DGHOST',
-                'sku_code'       => 'DGHMBL28',
-                'price_provider' => 8900.00,
-                'price_sell'     => 10000.00,
-                'status'         => 'aktif',
-                'is_active'      => true,
-            ],
-            [
-                'name'           => '44 Diamonds Mobile Legend DGHOST',
-                'sku_code'       => 'DGHMBL44',
-                'price_provider' => 13350.00,
-                'price_sell'     => 15000.00,
                 'status'         => 'aktif',
                 'is_active'      => true,
             ],

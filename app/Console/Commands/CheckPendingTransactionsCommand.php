@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Transaction;
-use App\Services\ApigamesService;
+use App\Services\DigiflazzService;
 use Illuminate\Support\Facades\Log;
 
 class CheckPendingTransactionsCommand extends Command
@@ -21,14 +21,14 @@ class CheckPendingTransactionsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Cek status transaksi pending di APIGames';
+    protected $description = 'Cek status transaksi pending di Digiflazz';
 
     /**
      * Execute the console command.
      */
-    public function handle(ApigamesService $apigamesService)
+    public function handle(DigiflazzService $digiflazzService)
     {
-        $this->info('Memulai pengecekan transaksi pending di APIGames...');
+        $this->info('Memulai pengecekan transaksi pending di Digiflazz...');
 
         // Cari transaksi yang pembayarannya sukses (paid) tapi status topupnya masih pending / processing
         $transactions = Transaction::where('payment_status', 'paid')
@@ -45,15 +45,18 @@ class CheckPendingTransactionsCommand extends Command
         foreach ($transactions as $transaction) {
             $this->info("Mengecek Order ID: {$transaction->order_id}...");
 
-            $response = $apigamesService->checkTransactionStatus($transaction->order_id);
+            $response = $digiflazzService->checkTransactionStatus(
+                $transaction->order_id,
+                $transaction->product->sku_code,
+                $transaction->target_user_id
+            );
 
             // Log response untuk debugging
             Log::info("CheckPendingCommand response for {$transaction->order_id}: ", $response);
 
-            if (isset($response['status']) && $response['status'] == 1) {
-                $data = $response['data'] ?? [];
-                $status = $data['status'] ?? '';
-                $sn = $data['sn'] ?? null;
+            if (isset($response['success']) && $response['success'] === true) {
+                $status = $response['status'] ?? '';
+                $sn = $response['sn'] ?? null;
 
                 if (strcasecmp($status, 'Sukses') === 0) {
                     $transaction->update([
@@ -71,7 +74,7 @@ class CheckPendingTransactionsCommand extends Command
                     $this->info("Order ID {$transaction->order_id} masih berstatus: {$status}");
                 }
             } else {
-                $errorMsg = $response['error_msg'] ?? 'Gagal cek status';
+                $errorMsg = $response['message'] ?? 'Gagal cek status';
                 $this->error("Gagal mengecek Order ID {$transaction->order_id}: {$errorMsg}");
             }
         }

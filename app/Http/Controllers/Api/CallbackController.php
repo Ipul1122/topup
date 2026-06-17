@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Services\ApigamesService;
+use App\Services\DigiflazzService;
 use Illuminate\Support\Facades\Log;
 
 class CallbackController extends Controller
 {
-    public function midtrans(Request $request, ApigamesService $apigamesService)
+    public function midtrans(Request $request, DigiflazzService $digiflazzService)
     {
         $payload = $request->all();
         Log::info('Webhook Midtrans Masuk: ', $payload); // Catat di log untuk debugging
@@ -51,33 +51,32 @@ class CallbackController extends Controller
                 // Ubah status pembayaran jadi Lunas
                 $transaction->update(['payment_status' => 'paid', 'topup_status' => 'processing']);
 
-                // OTOMATIS TEMBAK APIGAMES DI SINI!
-                $topupResponse = $apigamesService->topup(
+                // OTOMATIS TEMBAK DIGIFLAZZ DI SINI!
+                $topupResponse = $digiflazzService->topup(
                     $transaction->order_id, 
                     $transaction->product->sku_code, 
                     $transaction->target_user_id
                 );
 
-                // Cek hasil dari APIGames
-                if (isset($topupResponse['status']) && $topupResponse['status'] == 1) {
-                    $data = $topupResponse['data'] ?? [];
-                    $status = $data['status'] ?? '';
-                    $sn = $data['sn'] ?? 'Sukses';
+                // Cek hasil dari Digiflazz
+                if (isset($topupResponse['success']) && $topupResponse['success'] === true) {
+                    $status = $topupResponse['status'] ?? '';
+                    $sn = $topupResponse['sn'] ?? 'Sukses';
 
                     if (strcasecmp($status, 'Sukses') === 0) {
                         $transaction->update(['topup_status' => 'success', 'sn' => $sn]);
                         Log::info("Top Up Sukses: " . $orderId);
                     } elseif (strcasecmp($status, 'Gagal') === 0) {
                         $transaction->update(['topup_status' => 'failed', 'sn' => $sn]);
-                        Log::error("Top Up Gagal di APIGames (Transaksi Gagal): " . $orderId, $topupResponse);
+                        Log::error("Top Up Gagal di Digiflazz (Transaksi Gagal): " . $orderId, $topupResponse);
                     } else {
                         // Jika status masih pending/processing di provider
                         $transaction->update(['topup_status' => 'processing', 'sn' => $sn]);
-                        Log::info("Top Up Pending di APIGames: " . $orderId);
+                        Log::info("Top Up Pending di Digiflazz: " . $orderId);
                     }
                 } else {
                     $transaction->update(['topup_status' => 'failed']);
-                    Log::error("Top Up Gagal di APIGames (API Error): ", $topupResponse);
+                    Log::error("Top Up Gagal di Digiflazz (API Error): ", $topupResponse);
                 }
             }
         } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {

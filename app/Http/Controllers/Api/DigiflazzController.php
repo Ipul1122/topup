@@ -3,24 +3,22 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\ApigamesService;
+use App\Services\DigiflazzService;
 use Illuminate\Http\Request;
 
-class ApigamesController extends Controller
+class DigiflazzController extends Controller
 {
-    protected $apigamesService;
+    protected $digiflazzService;
 
     // Inject Service menggunakan Dependency Injection Laravel
-    public function __construct(ApigamesService $apigamesService)
+    public function __construct(DigiflazzService $digiflazzService)
     {
-        $this->apigamesService = $apigamesService;
+        $this->digiflazzService = $digiflazzService;
     }
 
-   public function getInfo()
+    public function getInfo()
     {
-        $info = $this->apigamesService->getMerchantInfo();
-        
-        // KITA RETURN LANGSUNG RAW RESPONSE DARI APIGAMES
+        $info = $this->digiflazzService->getMerchantInfo();
         return response()->json($info);
     }
 
@@ -31,12 +29,11 @@ class ApigamesController extends Controller
             'user_id'   => 'required|string',
         ]);
 
-        $response = $this->apigamesService->checkUsername(
+        $response = $this->digiflazzService->checkUsername(
             $request->game_code, 
             $request->user_id
         );
 
-        // KITA RETURN LANGSUNG RAW RESPONSE DARI APIGAMES
         return response()->json($response);
     }
 }

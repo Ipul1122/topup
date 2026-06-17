@@ -5,52 +5,26 @@ $app = require_once 'bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
-use Illuminate\Support\Facades\Http;
+use App\Services\DigiflazzService;
 
-$merchantId = config('apigames.merchant_id');
-$secretKey = config('apigames.secret_key');
-$baseUrl = config('apigames.base_url');
-$signature = md5($merchantId . $secretKey);
+$digiflazzService = new DigiflazzService();
 
-$tests = [
-    'Test 1: Separate zone_id' => [
-        'user_id' => '1030612204',
-        'zone_id' => '13124',
-        'signature' => $signature,
-    ],
-    'Test 2: Separate server_id' => [
-        'user_id' => '1030612204',
-        'server_id' => '13124',
-        'signature' => $signature,
-    ],
-    'Test 3: Separate server' => [
-        'user_id' => '1030612204',
-        'server' => '13124',
-        'signature' => $signature,
-    ],
-    'Test 4: Separate zone' => [
-        'user_id' => '1030612204',
-        'zone' => '13124',
-        'signature' => $signature,
-    ],
-    'Test 5: Concatenated user+zone' => [
-        'user_id' => '103061220413124',
-        'signature' => $signature,
-    ],
-    'Test 6: Parenthesis user(zone)' => [
-        'user_id' => '1030612204(13124)',
-        'signature' => $signature,
-    ],
-];
+echo "=== Test 1: Get Merchant Info (Cek Saldo) ===\n";
+$info = $digiflazzService->getMerchantInfo();
+print_r($info);
+echo "\n";
 
-foreach ($tests as $name => $params) {
-    echo "=== {$name} ===\n";
-    $endpoint = "{$baseUrl}/merchant/{$merchantId}/cek-username/mobilelegend";
-    try {
-        $response = Http::get($endpoint, $params);
-        echo "URL: " . $response->effectiveUri() . "\n";
-        echo "Response: " . $response->body() . "\n\n";
-    } catch (\Exception $e) {
-        echo "Error: " . $e->getMessage() . "\n\n";
-    }
+echo "=== Test 2: Check Username Mock ===\n";
+$usernameCheck = $digiflazzService->checkUsername('mobilelegend', '12345678');
+print_r($usernameCheck);
+echo "\n";
+
+echo "=== Test 3: Get Products Price List (Top 3 Items) ===\n";
+$products = $digiflazzService->getProducts();
+if (isset($products['data'])) {
+    $slice = array_slice($products['data'], 0, 3);
+    print_r($slice);
+} else {
+    print_r($products);
 }
+echo "\n";
