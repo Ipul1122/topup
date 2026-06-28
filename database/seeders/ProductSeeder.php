@@ -23,7 +23,7 @@ class ProductSeeder extends Seeder
         );
 
         // Hapus produk lama ber-category_id ini agar tidak bentrok
-        Product::where('category_id', $mlCategory->id)->delete();
+        Product::query()->where('category_id', $mlCategory->id)->delete();
 
         $mlProducts = [
             [

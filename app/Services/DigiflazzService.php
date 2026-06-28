@@ -110,14 +110,69 @@ class DigiflazzService
     }
 
     /**
-     * Cek Akun Game (Validasi Nickname - Mocked because Digiflazz doesn't support separate username check)
+     * Cek Akun Game (Validasi Nickname menggunakan Pascabayar Inquiry)
      */
     public function checkUsername(string $gameCode, string $userId): array
     {
-        return [
-            'status' => 1,
-            'data'   => 'Pengecekan username tidak tersedia di Digiflazz (ID: ' . $userId . ')'
+        $endpoint = $this->baseUrl . '/transaction';
+        $refId = 'CEK-' . strtoupper($gameCode) . '-' . time();
+        
+        // Pengecekan username menggunakan Prod Key sesuai petunjuk user
+        $prodKey = env('DIGIFLAZZ_API_KEY_PROD');
+        $sign = md5($this->username . $prodKey . $refId);
+
+        // Bersihkan customer_no dari karakter non-numerik (misal format 113332888(2576) menjadi 1133328882576)
+        $cleanUserId = preg_replace('/[^0-9]/', '', $userId);
+
+        $payload = [
+            'commands'       => 'inq-pasca',
+            'username'       => $this->username,
+            'buyer_sku_code' => 'hp-games',
+            'customer_no'    => $cleanUserId,
+            'ref_id'         => $refId,
+            'sign'           => $sign,
         ];
+
+        try {
+            Log::info('Digiflazz Inquiry Request: ', $payload);
+
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($endpoint, $payload);
+
+            Log::info('Digiflazz Inquiry Response: ', [$response->body()]);
+
+            $result = $response->json();
+
+            if (isset($result['data'])) {
+                $data = $result['data'];
+                $rc = $data['rc'] ?? '';
+
+                if ($rc === '00') {
+                    return [
+                        'status' => 1,
+                        'data'   => $data['tr_name'] ?? 'Username ditemukan'
+                    ];
+                }
+
+                return [
+                    'status'  => 0,
+                    'message' => $data['message'] ?? 'Gagal mengecek akun.'
+                ];
+            }
+
+            return [
+                'status'  => 0,
+                'message' => 'Format response supplier tidak sesuai.'
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Digiflazz Inquiry Error: ' . $e->getMessage());
+            return [
+                'status'  => 0,
+                'message' => 'Terjadi kesalahan sistem internal.'
+            ];
+        }
     }
 
     /**
@@ -129,7 +184,7 @@ class DigiflazzService
         $payload = [
             'cmd'      => 'prepaid',
             'username' => $this->username,
-            'sign'     => md5($this->username . $this->apiKey . 'pricelist'),
+            'sign'     => md5($this->username . $this->apiKey . 'price'),
         ];
 
         try {
